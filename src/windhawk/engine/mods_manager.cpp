@@ -16,9 +16,12 @@ DWORD GetModuleSizeOfImage(HMODULE module) {
 }  // namespace
 
 ModsManager::ModsManager() {
+    LOG(L"ModsManager: Starting mod enumeration...");
     StorageManager::GetInstance().EnumMods([this](PCWSTR modName) {
         try {
-            if (Mod::ShouldLoadInRunningProcess(modName)) {
+            bool shouldLoad = Mod::ShouldLoadInRunningProcess(modName);
+            LOG(L"ModsManager: Enumerated mod '%ls', ShouldLoadInRunningProcess=%d", modName, shouldLoad);
+            if (shouldLoad) {
                 auto result = m_mods.emplace(modName, modName);
                 if (!result.second) {
                     throw std::logic_error(
@@ -26,15 +29,19 @@ ModsManager::ModsManager() {
                 }
             }
         } catch (const std::exception& e) {
-            LOG(L"Mod (%s) initializing failed: %S", modName, e.what());
+            LOG(L"Mod (%ls) initializing failed: %S", modName, e.what());
         }
     });
 
+    LOG(L"ModsManager: Total mods to load in this process = %zu", m_mods.size());
+
     for (auto& [name, mod] : m_mods) {
         try {
+            LOG(L"ModsManager: Loading mod '%ls'...", name.c_str());
             mod.Load(/*loadedOnStartup=*/true);
+            LOG(L"ModsManager: Mod '%ls' loaded successfully.", name.c_str());
         } catch (const std::exception& e) {
-            LOG(L"Mod (%s) loading failed: %S", name.c_str(), e.what());
+            LOG(L"Mod (%ls) loading failed: %S", name.c_str(), e.what());
         }
     }
 }

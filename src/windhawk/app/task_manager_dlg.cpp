@@ -161,15 +161,14 @@ void CTaskManagerDlg::LoadLanguageStrings() {
             break;
     }
 
-    WCHAR title[1024] = L"Windhawk";
+    WCHAR title[1024] = L"Sparrowhawk";
     if (titleId) {
-        _snwprintf_s(title, _TRUNCATE, L"%s - Windhawk",
+        _snwprintf_s(title, _TRUNCATE, L"%s - Sparrowhawk",
                      Functions::LoadStrFromRsrc(titleId));
     }
     SetWindowText(title);
 
-    SetDlgItemText(IDOK,
-                   Functions::LoadStrFromRsrc(IDS_TASKDLG_BUTTON_OPEN_APP));
+    SetDlgItemText(IDOK, L"Close");
 
     UINT columnStringIds[] = {
         IDS_TASKDLG_COLUMN_MOD,
@@ -303,8 +302,10 @@ void CTaskManagerDlg::OnDpiChanged(UINT nDpiX, UINT nDpiY, PRECT pRect) {
 }
 
 void CTaskManagerDlg::OnOK(UINT uNotifyCode, int nID, CWindow wndCtl) {
-    if (m_dialogOptions.runButtonCallback) {
+    if (m_dialogOptions.autonomousMode && m_dialogOptions.runButtonCallback) {
         m_dialogOptions.runButtonCallback(m_hWnd);
+    } else {
+        DestroyWindow();
     }
 }
 

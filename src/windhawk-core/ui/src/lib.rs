@@ -75,6 +75,15 @@ const WEBVIEW_PROFILE_SUBDIR: &str = "EBWebView";
 /// VSCodium ships with the install, so the launch entry points route to real
 /// handlers and a missing editor is a launch-time error, not a hidden button.
 pub fn run() {
+    let _ = std::fs::write("C:\\verthawk_ui.log", "windhawk-ui starting...\n");
+    std::panic::set_hook(Box::new(|info| {
+        let msg = format!("UI Panic: {info}\n");
+        if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open("C:\\verthawk_ui.log") {
+            use std::io::Write;
+            let _ = f.write_all(msg.as_bytes());
+        }
+    }));
+
     // Give the process a stable AppUserModelID before any window opens so the
     // taskbar groups the UI window under a single Windhawk identity rather than
     // one derived from the executable path.
@@ -84,6 +93,11 @@ pub fn run() {
     // exactly while the UI runs; `_detect` drops at app exit. Creating it also
     // tells us whether a UI is already running.
     let _detect = window::hold_detect_mutex();
+    let msg = format!("Detect mutex another_instance_running: {}\n", _detect.another_instance_running());
+    if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open("C:\\verthawk_ui.log") {
+        use std::io::Write;
+        let _ = f.write_all(msg.as_bytes());
+    }
 
     // If a UI is already running we are a second instance: the single-instance plugin
     // will forward our argv to the primary and exit, and the primary's callback brings
@@ -96,21 +110,19 @@ pub fn run() {
     }
 
     tauri::Builder::default()
-        // Single-instance MUST be the first plugin. On a second launch it
-        // forwards the new argv to this (primary) instance and exits the second
-        // process; the callback brings the primary's window to front. A launch
-        // always means ensure-running-and-foreground; the tray closes the UI
-        // with a window message (SC_CLOSE), not a re-launch, so there is no
-        // intent to parse.
         .plugin(tauri_plugin_single_instance::init(|app, _argv, _cwd| {
+            if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open("C:\\verthawk_ui.log") {
+                use std::io::Write;
+                let _ = f.write_all(b"single_instance callback fired, showing main window...\n");
+            }
             window::show_and_focus_main(app);
         }))
-        // The external-link shim: the navigation handler routes external links
-        // through this plugin.
         .plugin(tauri_plugin_opener::init())
         .setup(move |app| {
-            // Bring up the core before the window opens. A failure is fatal and
-            // shown natively, since there is no webview yet to render it.
+            if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open("C:\\verthawk_ui.log") {
+                use std::io::Write;
+                let _ = f.write_all(b"setup hook started...\n");
+            }
             let CoreHandles {
                 core,
                 session,
@@ -213,13 +225,14 @@ pub fn run() {
                     .on_navigation(move |url| shell::handle_navigation(&nav_handle, url))
                     .build();
             let main_window = match built {
-                Ok(window) => window,
+                Ok(window) => {
+                    if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open("C:\\verthawk_ui.log") {
+                        use std::io::Write;
+                        let _ = f.write_all(b"WebviewWindowBuilder build succeeded, showing window...\n");
+                    }
+                    window
+                }
                 Err(error) => {
-                    // Surface a window-build failure natively instead of the opaque
-                    // exit-101 panic Tauri raises when the setup hook returns Err. The
-                    // data folder was ensured writable above, so a denial here is a
-                    // different WebView2 startup fault (a missing runtime, a profile
-                    // locked by another instance); present it as-is.
                     fail_startup(&format!("The main window could not be created.\n\n{error}"));
                 }
             };
@@ -404,6 +417,11 @@ pub fn run() {
 /// from setup would surface only as Tauri's opaque exit-101 panic. The lead line is
 /// fixed; `detail` is the diagnostic paragraph shown beneath it.
 fn fail_startup(detail: &str) -> ! {
+    let msg = format!("UI fail_startup: {detail}\n");
+    if let Ok(mut f) = std::fs::OpenOptions::new().create(true).append(true).open("C:\\verthawk_ui.log") {
+        use std::io::Write;
+        let _ = f.write_all(msg.as_bytes());
+    }
     window::show_fatal(&format!("Windhawk could not start.\n\n{detail}"));
     std::process::exit(1);
 }

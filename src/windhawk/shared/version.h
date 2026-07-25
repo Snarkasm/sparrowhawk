@@ -11,7 +11,12 @@
 // (VER_FILE_VERSION_STR/_WSTR) and the .rc "FileVersion"/"ProductVersion"
 // string values; the numeric fields above, VER_FILE_VERSION (the .rc
 // FILEVERSION tuple) and VER_FILE_VERSION_LONG stay strictly numeric.
-#define VERSION_PRERELEASE          "-alpha.1"
+#define VERSION_PRERELEASE          ""
+
+// Company & Product Resource Metadata
+#define VER_COMPANY_NAME_STR        "Sparrowhawk Project"
+#define VER_PRODUCT_NAME_STR        "Sparrowhawk"
+#define VER_LEGAL_COPYRIGHT_STR     "Copyright (C) 2026 Sparrowhawk Project"
 
 // etc.
 #define STRINGIZE2(s)               #s

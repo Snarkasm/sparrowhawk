@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM64">
       <Configuration>Debug</Configuration>
@@ -95,37 +95,37 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)libraries;$(ProjectDir)..\shared;$(ProjectDir)..\shared\libraries;$(IncludePath)</IncludePath>
-    <TargetName>windhawk</TargetName>
+    <TargetName>sparrowhawk</TargetName>
     <LibraryPath>$(ProjectDir)..\shared\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)libraries;$(ProjectDir)..\shared;$(ProjectDir)..\shared\libraries;$(IncludePath)</IncludePath>
-    <TargetName>windhawk</TargetName>
+    <TargetName>sparrowhawk</TargetName>
     <LibraryPath>$(ProjectDir)..\shared\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)libraries;$(ProjectDir)..\shared;$(ProjectDir)..\shared\libraries;$(IncludePath)</IncludePath>
-    <TargetName>windhawk</TargetName>
+    <TargetName>sparrowhawk</TargetName>
     <LibraryPath>$(ProjectDir)..\shared\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)libraries;$(ProjectDir)..\shared;$(ProjectDir)..\shared\libraries;$(IncludePath)</IncludePath>
-    <TargetName>windhawk</TargetName>
+    <TargetName>sparrowhawk</TargetName>
     <LibraryPath>$(ProjectDir)..\shared\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)libraries;$(ProjectDir)..\shared;$(ProjectDir)..\shared\libraries;$(IncludePath)</IncludePath>
-    <TargetName>windhawk</TargetName>
+    <TargetName>sparrowhawk</TargetName>
     <LibraryPath>$(ProjectDir)..\shared\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)libraries;$(ProjectDir)..\shared;$(ProjectDir)..\shared\libraries;$(IncludePath)</IncludePath>
-    <TargetName>windhawk</TargetName>
+    <TargetName>sparrowhawk</TargetName>
     <LibraryPath>$(ProjectDir)..\shared\libraries;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -139,12 +139,17 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalManifestDependencies>type=%27Win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27*%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <AdditionalDependencies>taskschd.lib;userenv.lib;wevtapi.lib;wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
+      <LinkControlFlowGuard>Guard</LinkControlFlowGuard>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -178,12 +183,17 @@
       <PreprocessorDefinitions>_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalManifestDependencies>type=%27Win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27*%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <AdditionalDependencies>taskschd.lib;userenv.lib;wevtapi.lib;wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
+      <LinkControlFlowGuard>Guard</LinkControlFlowGuard>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -216,12 +226,17 @@
       <PreprocessorDefinitions>_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalManifestDependencies>type=%27Win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27*%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <AdditionalDependencies>taskschd.lib;userenv.lib;wevtapi.lib;wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
+      <LinkControlFlowGuard>Guard</LinkControlFlowGuard>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -254,13 +269,19 @@
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalManifestDependencies>type=%27Win32%27 name=%27Microsoft.Windows.Common-Controls%27 version=%276.0.0.0%27 processorArchitecture=%27*%27 publicKeyToken=%276595b64144ccf1df%27 language=%27*%27;%(AdditionalManifestDependencies)</AdditionalManifestDependencies>
       <AdditionalDependencies>taskschd.lib;userenv.lib;wevtapi.lib;wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
+      <UACExecutionLevel>AsInvoker</UACExecutionLevel>
       <GenerateMapFile>true</GenerateMapFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
+      <LinkControlFlowGuard>Guard</LinkControlFlowGuard>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -293,6 +314,7 @@
       <PreprocessorDefinitions>_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -300,6 +322,10 @@
       <AdditionalDependencies>taskschd.lib;userenv.lib;wevtapi.lib;wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
+      <LinkControlFlowGuard>Guard</LinkControlFlowGuard>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -332,6 +358,7 @@
       <PreprocessorDefinitions>_WINDOWS;STRICT;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions>/d1trimfile:"$(SolutionDir)\" %(AdditionalOptions)</AdditionalOptions>
+      <ControlFlowGuard>Guard</ControlFlowGuard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -339,6 +366,10 @@
       <AdditionalDependencies>taskschd.lib;userenv.lib;wevtapi.lib;wtsapi32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <GenerateMapFile>true</GenerateMapFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
+      <LinkControlFlowGuard>Guard</LinkControlFlowGuard>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>

@@ -11,7 +11,7 @@ use std::path::Path;
 // windhawk-core.dll is a library, so it declares VFT_DLL. Its FileDescription
 // distinguishes it from the CLI and the UI, which share the "Windhawk" product.
 const FILE_TYPE: &str = "0x2L"; // VFT_DLL
-const FILE_DESCRIPTION: &str = "Windhawk Core";
+const FILE_DESCRIPTION: &str = "Sparrowhawk Core Library";
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
@@ -62,10 +62,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Ramen Software"
+            VALUE "CompanyName", "Sparrowhawk Project"
             VALUE "FileDescription", "{description}"
             VALUE "FileVersion", "{version}"
-            VALUE "ProductName", "Windhawk"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Sparrowhawk Project"
+            VALUE "OriginalFilename", "windhawk-core.dll"
+            VALUE "ProductName", "Sparrowhawk"
             VALUE "ProductVersion", "{version}"
         END
     END

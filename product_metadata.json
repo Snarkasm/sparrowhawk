@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "product": "Sparrowhawk",
+  "version": "1.0.0",
+  "publisher": "Sparrowhawk Project",
+  "license": "GPL-3.0",
+  "repository": "https://github.com/Snarkasm/sparrowhawk",
+  "architecture": "x64",
+  "offline_mode": true,
+  "telemetry_enabled": false,
+  "auto_update_enabled": false,
+  "engine_base": {
+    "name": "Windhawk Core",
+    "version": "2.0.0"
+  },
+  "prebaked_mods": [
+    {
+      "id": "vertical-taskbar",
+      "name": "Vertical Taskbar",
+      "author": "m417z",
+      "file": "vertical-taskbar.wh.cpp"
+    },
+    {
+      "id": "taskbar-clock-customization",
+      "name": "Taskbar Clock Customization",
+      "author": "m417z",
+      "file": "taskbar-clock-customization.wh.cpp"
+    }
+  ]
+}

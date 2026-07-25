@@ -76,7 +76,7 @@ bool StorageManager::FlushAppConfig(PCWSTR section) {
 
 std::filesystem::path StorageManager::GetModMetadataPath(
     PCWSTR metadataCategory) {
-    return GetEngineAppDataPath() / L"ModsWritable" / metadataCategory;
+    return appDataPath / L"ModsWritable" / metadataCategory;
 }
 
 bool StorageManager::IsPortable() {
@@ -144,6 +144,13 @@ StorageManager::StorageManager() {
 
     std::filesystem::path iniFilePath = modulePath;
     iniFilePath.replace_extension("ini");
+
+    if (!std::filesystem::is_regular_file(iniFilePath)) {
+        std::filesystem::path fallbackIni = folderPath / L"windhawk.ini";
+        if (std::filesystem::is_regular_file(fallbackIni)) {
+            iniFilePath = fallbackIni;
+        }
+    }
 
     auto storage = IniFileSettings(iniFilePath.c_str(), L"Storage", false);
 

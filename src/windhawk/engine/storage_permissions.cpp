@@ -23,6 +23,11 @@ unique_sid_local MakeSid(PCWSTR sidString) {
 }  // namespace
 
 void EnsureStoragePermissions() noexcept try {
+    auto& storageManager = StorageManager::GetInstance();
+    if (!storageManager.GetSettingsRegistryKey().has_value()) {
+        return;
+    }
+
     // The three principals the installer grants access to: Everyone, all
     // application packages, and all restricted application packages.
     auto everyone = MakeSid(L"S-1-1-0");
@@ -35,8 +40,6 @@ void EnsureStoragePermissions() noexcept try {
     PSID sids[] = {everyone.get(), allAppPackages.get(),
                    allRestrictedAppPackages.get()};
     constexpr size_t sidCount = ARRAYSIZE(sids);
-
-    auto& storageManager = StorageManager::GetInstance();
 
     auto ensureFile = [&](const std::filesystem::path& path,
                           ACCESS_MASK access) {
@@ -52,7 +55,9 @@ void EnsureStoragePermissions() noexcept try {
         DWORD error =
             Functions::EnsureFileDaclContainsAces(path.c_str(), aces, sidCount);
         if (error != ERROR_SUCCESS) {
-            LOG(L"Failed to set permissions for %s: %u", path.c_str(), error);
+            LOG(L"Failed to set permissions for %ls: %u", path.c_str(), error);
+        } else {
+            LOG(L"EnsureStoragePermissions: Permissions set for %ls", path.c_str());
         }
     };
 

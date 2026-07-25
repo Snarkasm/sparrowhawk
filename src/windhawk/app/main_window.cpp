@@ -446,20 +446,11 @@ LRESULT CMainWindow::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
             return Action::kNone;
         }
 
-        menu.AppendMenu(MF_STRING, static_cast<UINT_PTR>(Action::kOpenUI),
-                        Functions::LoadStrFromRsrc(IDS_TRAY_OPEN));
+        menu.AppendMenu(MF_STRING | MF_DISABLED | MF_GRAYED, static_cast<UINT_PTR>(0), L"Sparrowhawk (Active)");
         menu.AppendMenu(MF_SEPARATOR);
-        menu.AppendMenu(MF_STRING,
-                        static_cast<UINT_PTR>(Action::kModTaskManager),
-                        Functions::LoadStrFromRsrc(IDS_TRAY_LOADED_MODS));
-        menu.AppendMenu(
-            MF_STRING, static_cast<UINT_PTR>(Action::kToolkit),
-            (std::wstring(Functions::LoadStrFromRsrc(IDS_TRAY_TOOLKIT)) +
-             (m_disableToolkitHotkey ? L"" : L"\tCtrl+Win+W"))
-                .c_str());
+        menu.AppendMenu(MF_STRING, static_cast<UINT_PTR>(Action::kModTaskManager), L"Loaded Mods...");
         menu.AppendMenu(MF_SEPARATOR);
-        menu.AppendMenu(MF_STRING, static_cast<UINT_PTR>(Action::kExit),
-                        Functions::LoadStrFromRsrc(IDS_TRAY_EXIT));
+        menu.AppendMenu(MF_STRING, static_cast<UINT_PTR>(Action::kExit), L"Exit Sparrowhawk");
 
         CPoint point;
         GetCursorPos(&point);
@@ -474,15 +465,11 @@ LRESULT CMainWindow::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
     switch (m_trayIcon->HandleMsg(wParam, lParam)) {
         case AppTrayIcon::TrayAction::kDefault:
-            action = Action::kOpenUI;
+            action = Action::kNone;
             break;
 
         case AppTrayIcon::TrayAction::kBalloon:
-            if (m_lastUpdateStatus && m_lastUpdateStatus->appUpdateAvailable) {
-                action = Action::kOpenUpdatePage;
-            } else {
-                action = Action::kOpenUI;
-            }
+            action = Action::kNone;
             break;
 
         case AppTrayIcon::TrayAction::kContextMenu:
@@ -509,11 +496,7 @@ LRESULT CMainWindow::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam) {
             break;
 
         case Action::kExit:
-            if (m_portable) {
-                Exit();
-            } else {
-                StopService();
-            }
+            Exit();
             break;
     }
 

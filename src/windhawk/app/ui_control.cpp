@@ -295,6 +295,10 @@ void RunWindhawkUI() {
     auto uiExePath =
         std::filesystem::path(modulePath).parent_path() / L"windhawk-ui.exe";
 
+    if (!std::filesystem::exists(uiExePath)) {
+        return;
+    }
+
     static bool arm64Enabled = IsArm64NativeMachine();
 
     std::wstring envBlock = BuildWindhawkUIProcessEnvBlock(arm64Enabled);

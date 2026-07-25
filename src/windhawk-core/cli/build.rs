@@ -11,7 +11,7 @@ use std::path::Path;
 // The CLI is an executable, so it declares VFT_APP. Its FileDescription
 // distinguishes it from the DLL and the UI, which share the "Windhawk" product.
 const FILE_TYPE: &str = "0x1L"; // VFT_APP
-const FILE_DESCRIPTION: &str = "Windhawk CLI";
+const FILE_DESCRIPTION: &str = "Sparrowhawk CLI";
 
 fn main() {
     println!("cargo:rerun-if-changed=build.rs");
@@ -62,10 +62,12 @@ BEGIN
     BEGIN
         BLOCK "040904b0"
         BEGIN
-            VALUE "CompanyName", "Ramen Software"
+            VALUE "CompanyName", "Sparrowhawk Project"
             VALUE "FileDescription", "{description}"
             VALUE "FileVersion", "{version}"
-            VALUE "ProductName", "Windhawk"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Sparrowhawk Project"
+            VALUE "OriginalFilename", "windhawk-cli.exe"
+            VALUE "ProductName", "Sparrowhawk"
             VALUE "ProductVersion", "{version}"
         END
     END

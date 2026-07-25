@@ -44,7 +44,10 @@ fn parse_registry_key(registry_key: &str) -> Option<(Hive, String)> {
 
 impl StorageProvider for WindowsStorageProvider {
     fn resolve(&self, app_root_path: &str) -> Result<ResolvedStorage, StorageResolveError> {
-        let ini_path = Path::new(app_root_path).join("windhawk.ini");
+        let mut ini_path = Path::new(app_root_path).join("sparrowhawk.ini");
+        if !ini_path.exists() {
+            ini_path = Path::new(app_root_path).join("windhawk.ini");
+        }
         let reader = IniBackend::new();
         let storage_tree = TreeLocation::Ini {
             file: ini_path.clone(),

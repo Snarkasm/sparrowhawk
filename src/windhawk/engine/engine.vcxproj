@@ -1,5 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<?xml version='1.0' encoding='utf-8'?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build" ToolsVersion="15.0">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|ARM64">
       <Configuration>Debug</Configuration>
@@ -163,6 +163,9 @@
       <ModuleDefinitionFile>_exports.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -185,6 +188,9 @@
       <ModuleDefinitionFile>_exports.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">
@@ -207,6 +213,9 @@
       <ModuleDefinitionFile>_exports.def</ModuleDefinitionFile>
       <DelayLoadDLLs>
       </DelayLoadDLLs>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -233,6 +242,9 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateMapFile>true</GenerateMapFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -259,6 +271,9 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateMapFile>true</GenerateMapFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">
@@ -285,6 +300,9 @@
       <DelayLoadDLLs>
       </DelayLoadDLLs>
       <GenerateMapFile>true</GenerateMapFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <HighEntropyVA>true</HighEntropyVA>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

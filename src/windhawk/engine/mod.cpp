@@ -2531,10 +2531,13 @@ bool Mod::Load(bool loadedOnStartup) {
 
     m_libraryFileName = settings->GetString(L"LibraryFileName").value_or(L"");
     if (m_libraryFileName.empty()) {
+        LOG(L"Mod::Load: ERROR - Missing LibraryFileName value for mod '%ls'!", m_modName.c_str());
         throw std::runtime_error("Missing LibraryFileName value");
     }
 
     auto libraryPath = storageManager.GetModsPath() / m_libraryFileName;
+    LOG(L"Mod::Load: Mod='%ls', Version='%ls', LibraryFileName='%ls', Path='%ls'",
+        m_modName.c_str(), modVersion.c_str(), m_libraryFileName.c_str(), libraryPath.c_str());
 
     m_settingsChangeTime = settings->GetInt(L"SettingsChangeTime").value_or(0);
 

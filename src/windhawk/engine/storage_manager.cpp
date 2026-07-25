@@ -269,9 +269,16 @@ std::filesystem::path StorageManager::GetEngineBinariesPath() {
     std::filesystem::path libraryPath =
         wil::GetModuleFileName<std::wstring>(g_hDllInst);
 
-    // libraryPath is <engine binaries>/<version>/<architecture>/windhawk.dll,
-    // so strip the file name, architecture, and version segments.
-    return libraryPath.parent_path().parent_path().parent_path();
+    std::filesystem::path p = libraryPath.parent_path();
+    auto sub = p.filename();
+    if (sub == L"32" || sub == L"64" || sub == L"ARM64") {
+        p = p.parent_path();
+    }
+    sub = p.filename();
+    if (!sub.empty() && iswdigit(sub.c_str()[0])) {
+        p = p.parent_path();
+    }
+    return p;
 }
 
 std::filesystem::path StorageManager::GetModsPath(USHORT machine) {
@@ -335,10 +342,25 @@ StorageManager::StorageManager() {
         wil::GetModuleFileName<std::wstring>(g_hDllInst);
 
     std::filesystem::path iniFileFolder = dllPath.parent_path().parent_path();
-    std::filesystem::path iniFilePath = iniFileFolder / L"engine.ini";
+    std::filesystem::path iniFilePath;
 
-    if (!std::filesystem::is_regular_file(iniFilePath)) {
-        throw std::runtime_error("engine.ini not found");
+    if (std::filesystem::is_regular_file(iniFileFolder / L"engine.ini")) {
+        iniFilePath = iniFileFolder / L"engine.ini";
+    } else if (std::filesystem::is_regular_file(iniFileFolder / L"sparrowhawk.ini")) {
+        iniFilePath = iniFileFolder / L"sparrowhawk.ini";
+    } else if (std::filesystem::is_regular_file(iniFileFolder / L"windhawk.ini")) {
+        iniFilePath = iniFileFolder / L"windhawk.ini";
+    } else if (std::filesystem::is_regular_file(iniFileFolder.parent_path() / L"sparrowhawk.ini")) {
+        iniFileFolder = iniFileFolder.parent_path();
+        iniFilePath = iniFileFolder / L"sparrowhawk.ini";
+    } else if (std::filesystem::is_regular_file(iniFileFolder.parent_path() / L"windhawk.ini")) {
+        iniFileFolder = iniFileFolder.parent_path();
+        iniFilePath = iniFileFolder / L"windhawk.ini";
+    } else if (std::filesystem::is_regular_file(iniFileFolder.parent_path() / L"engine.ini")) {
+        iniFileFolder = iniFileFolder.parent_path();
+        iniFilePath = iniFileFolder / L"engine.ini";
+    } else {
+        throw std::runtime_error("Configuration INI file (sparrowhawk.ini/engine.ini) not found");
     }
 
     auto storage = IniFileSettings(iniFilePath.c_str(), L"Storage", false);

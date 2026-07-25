@@ -1,0 +1,68 @@
+name: Build Sparrowhawk Release
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+
+    - name: Restore NuGet Packages
+      working-directory: src/windhawk
+      run: nuget restore windhawk.sln
+
+    - name: Build C++ Binaries (Release)
+      working-directory: src/windhawk
+      run: |
+        call build.bat Release
+      shell: cmd
+
+    - name: Build Inno Setup Package
+      run: |
+        iscc sparrowhawk.iss
+      shell: cmd
+
+    - name: Compute SHA-256 Hashes
+      run: |
+        mkdir release -Force
+        Copy-Item -Path "Output\Sparrowhawk-Setup.exe" -Destination "release\Sparrowhawk-Setup.exe"
+        $file = "release\Sparrowhawk-Setup.exe"
+        $hash = (Get-FileHash $file -Algorithm SHA256).Hash.ToLower()
+        $line = "$hash  Sparrowhawk-Setup.exe"
+        $line | Out-File -FilePath release\SHA256SUMS.txt -Encoding utf8
+        Write-Host "Generated SHA256 Checksum:"
+        Get-Content release\SHA256SUMS.txt
+      shell: powershell
+
+    - name: Upload Release Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: Sparrowhawk-Setup
+        path: release/*
+
+    - name: Create GitHub Release
+      if: startsWith(github.ref, 'refs/tags/')
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          release/Sparrowhawk-Setup.exe
+          release/SHA256SUMS.txt
+        generate_release_notes: true

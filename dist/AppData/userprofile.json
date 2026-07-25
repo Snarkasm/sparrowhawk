@@ -1,0 +1,21 @@
+{
+  "app": {
+    "latestVersion": "1.7.3",
+    "latestVersionPreRelease": "2.0.0-alpha.1",
+    "version": "2.0-alpha.1"
+  },
+  "id": "{1BDC07E7-AD61-4AF5-9796-8E1F9C34C812}",
+  "mods": {
+    "taskbar-vertical": {
+      "disabled": false,
+      "latestVersion": "1.3.13",
+      "version": "1.3.13"
+    },
+    "taskbar-clock-customization": {
+      "disabled": false,
+      "latestVersion": "1.8",
+      "version": "1.8"
+    }
+  },
+  "os": "10.0.26100"
+}

@@ -224,6 +224,25 @@ AllProcessesInjector::AllProcessesInjector() {
 
     auto settings = StorageManager::GetInstance().GetAppConfig(L"Settings");
     m_includePattern = settings->GetString(L"Include").value_or(L"");
+    if (m_includePattern.empty()) {
+        std::wstring combinedInclude;
+        StorageManager::GetInstance().EnumMods([&](PCWSTR modName) {
+            auto modConfig = StorageManager::GetInstance().GetModConfig(modName, nullptr);
+            if (!modConfig->GetInt(L"Disabled").value_or(0)) {
+                auto inc = modConfig->GetString(L"Include").value_or(L"");
+                if (!inc.empty()) {
+                    if (!combinedInclude.empty()) {
+                        combinedInclude += L'|';
+                    }
+                    combinedInclude += inc;
+                }
+            }
+        });
+        if (!combinedInclude.empty()) {
+            m_includePattern = std::move(combinedInclude);
+            LOG(L"AllProcessesInjector: Computed m_includePattern from enabled mods: %ls", m_includePattern.c_str());
+        }
+    }
     m_excludePattern = settings->GetString(L"Exclude").value_or(L"");
     m_threadAttachExemptPattern =
         settings->GetString(L"ThreadAttachExempt").value_or(L"");
@@ -308,13 +327,16 @@ int AllProcessesInjector::InjectIntoNewProcesses() noexcept {
         }
 
         if (ShouldSkipNewProcess(processImageName)) {
-            VERBOSE(L"Skipping excluded process %u", dwNewProcessId);
+            LOG(L"Skipping process PID %u (%ls)", dwNewProcessId, processImageName.c_str());
             continue;
         }
+
+        LOG(L"Attempting injection into process PID %u (%ls)...", dwNewProcessId, processImageName.c_str());
 
         try {
             InjectIntoNewProcess(hNewProcess, dwNewProcessId,
                                  ShouldAttachExemptThread(processImageName));
+            LOG(L"Injection completed for PID %u (%ls)", dwNewProcessId, processImageName.c_str());
             count++;
         } catch (const wil::ResultException& e) {
             switch (e.GetErrorCode()) {

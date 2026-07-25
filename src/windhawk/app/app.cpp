@@ -139,9 +139,10 @@ int WINAPI wWinMain(_In_ HINSTANCE hInstance,
 namespace {
 
 void Initialize() {
-    // Make sure we can get an instance.
-    // If not, this call will throw an exception.
-    StorageManager::GetInstance();
+    LOG(L"Initializing Sparrowhawk daemon (build update)...");
+    auto& sm = StorageManager::GetInstance();
+    LOG(L"StorageManager initialized: Portable=%d, EnginePath=%ls",
+        sm.IsPortable(), sm.GetEnginePath().c_str());
 }
 
 void Run(Action action) {
@@ -286,10 +287,11 @@ void RunDaemon() {
     }
 
     wil::unique_mutex_nothrow mutex(
-        ::CreateMutex(nullptr, TRUE, L"WindhawkDaemon"));
+        ::CreateMutex(nullptr, TRUE, L"SparrowhawkDaemon"));
     THROW_LAST_ERROR_IF_NULL(mutex);
 
     if (GetLastError() == ERROR_ALREADY_EXISTS) {
+        LOG(L"SparrowhawkDaemon mutex already exists! Another daemon instance is running. Exiting.");
         if (!trayOnly) {
             UIControl::RunUIOrBringToFront(
                 nullptr, !portable && !Functions::IsRunAsAdmin());
@@ -298,11 +300,14 @@ void RunDaemon() {
         return;
     }
 
+    LOG(L"SparrowhawkDaemon mutex acquired successfully.");
     auto mutexLock = mutex.ReleaseMutex_scope_exit();
 
     if (portable) {
         if (!Functions::SetDebugPrivilege(TRUE)) {
             LOG(L"SetDebugPrivilege failed with error %u", GetLastError());
+        } else {
+            LOG(L"SetDebugPrivilege enabled successfully.");
         }
     }
 
@@ -466,7 +471,8 @@ void WaitForRunningProcessesToTerminate(DWORD timeout, bool windhawkBgOnly) {
             }
 
             if (windhawkBgOnly) {
-                if (_wcsicmp(pe.szExeFile, L"windhawk.exe") != 0) {
+                if (_wcsicmp(pe.szExeFile, L"windhawk.exe") != 0 &&
+                    _wcsicmp(pe.szExeFile, L"sparrowhawk.exe") != 0) {
                     continue;
                 }
 
@@ -582,7 +588,10 @@ bool RunAsAdmin(PCWSTR parameters) {
 
 bool PostCommandToPortableRunningDaemon(
     CMainWindow::PortableAppCommand command) {
-    CWindow hDaemonWnd(FindWindow(L"WindhawkDaemon", nullptr));
+    CWindow hDaemonWnd(FindWindow(L"SparrowhawkDaemon", nullptr));
+    if (!hDaemonWnd) {
+        hDaemonWnd = FindWindow(L"WindhawkDaemon", nullptr);
+    }
     if (!hDaemonWnd) {
         return false;
     }

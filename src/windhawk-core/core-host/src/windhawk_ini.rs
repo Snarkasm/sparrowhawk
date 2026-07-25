@@ -13,15 +13,15 @@ use std::path::Path;
 /// True if `dir` contains a `windhawk.ini` - the existence check app-root
 /// discovery validates a candidate directory with.
 pub fn has_windhawk_ini(dir: &Path) -> bool {
-    dir.join("windhawk.ini").exists()
+    dir.join("sparrowhawk.ini").exists() || dir.join("windhawk.ini").exists()
 }
 
 /// Whether the install at `app_root` is portable, from `[Storage] Portable` in
-/// windhawk.ini. Matches the core's `!!parseInt(Portable, 10)` (a nonzero
-/// integer is portable); a read or parse miss is a benign non-portable (the
-/// user-agent suffix is server-visible only).
+/// sparrowhawk.ini or windhawk.ini.
 pub fn is_portable(app_root: &str) -> bool {
-    let Ok(bytes) = std::fs::read(Path::new(app_root).join("windhawk.ini")) else {
+    let bytes = std::fs::read(Path::new(app_root).join("sparrowhawk.ini"))
+        .or_else(|_| std::fs::read(Path::new(app_root).join("windhawk.ini")));
+    let Ok(bytes) = bytes else {
         return false;
     };
     portable_flag(&decode_ini(&bytes))

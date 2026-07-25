@@ -1,0 +1,27 @@
+# Temporary & Output Folders
+dist_test/
+Output/
+windhawk_setup.exe
+
+# Visual Studio & MSBuild Artifacts
+*.user
+*.aps
+*.suo
+*.VC.db
+*.VC.opendb
+.vs/
+Debug/
+Release/
+x64/
+x86/
+ARM64/
+src/windhawk/Release/
+src/windhawk/x64/
+src/windhawk/app/Release/
+src/windhawk/app/x64/
+src/windhawk/engine/Release/
+src/windhawk/engine/x64/
+
+# Temporary logs & scratch files
+*.log
+sparrowhawk.log
